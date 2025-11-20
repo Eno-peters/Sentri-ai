@@ -1,10 +1,10 @@
-SentriAI – AI-Powered Early Student Dropout Prediction System**
+SentriAI – AI-Powered Early Student Dropout Prediction System
 
 SentriAI is a lightweight, AI-driven early-warning simulation tool designed to help schools identify students who are at risk of dropping out. Using synthetic data, simple prediction logic, and a clean admin-facing interface, the system demonstrates how predictive analytics can support early intervention and improve student retention.
 
 This MVP was built using a no-code/low-code stack — **Lovable**, **Glide/Airtable AI**, **Mockaroo/ChatGPT synthetic data**, and optional **Figma UI enhancements**. It includes a functional prototype, predictive simulation, structured dashboards, and polished design assets suitable for demos or pitch presentations.
 
-## 📌 **Table of Contents**
+## 📌 Table of Contents
 
 * Overview
 * Features
