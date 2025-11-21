@@ -4,7 +4,7 @@ SentriAI is a lightweight, AI-driven early-warning simulation tool designed to h
 
 This MVP was built using a no-code/low-code stack — **Lovable**, **Glide/Airtable AI**, **Mockaroo/ChatGPT synthetic data**, and optional **Figma UI enhancements**. It includes a functional prototype, predictive simulation, structured dashboards, and polished design assets suitable for demos or pitch presentations.
 
-## 📌 Table of Contents
+ 📌 Table of Contents
 
 * Overview
 * Features
