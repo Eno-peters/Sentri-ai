@@ -51,7 +51,11 @@ export function StudentsTable({
                 <TableRow key={student.Student_id} className="hover:bg-muted/50 transition-colors">
                   <TableCell className="font-medium">{student.Student_id}</TableCell>
                   <TableCell>{student.Grade}</TableCell>
-                  <TableCell>{(student.Attendance_rate * 100).toFixed(1)}%</TableCell>
+                  <TableCell>
+                    {student.Attendance_rate > 1 
+                      ? student.Attendance_rate.toFixed(1) 
+                      : (student.Attendance_rate * 100).toFixed(1)}%
+                  </TableCell>
                   <TableCell>{student.Gpa.toFixed(2)}</TableCell>
                   <TableCell>
                     <RiskBadge risk={student.risk_prediction} />
