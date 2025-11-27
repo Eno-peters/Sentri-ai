@@ -12,4 +12,5 @@ export interface Student {
   Gpa: number;
   risk_prediction: 'High' | 'Low' | null;
   risk_reason: string | null;
+  user_id: string;
 }
