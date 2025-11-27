@@ -4,8 +4,19 @@ import { StatsCard } from "@/components/dashboard/StatsCard";
 import { CSVUploader } from "@/components/dashboard/CSVUploader";
 import { StudentsTable } from "@/components/dashboard/StudentsTable";
 import { Button } from "@/components/ui/button";
-import { Users, AlertTriangle, RefreshCw } from "lucide-react";
+import { Users, AlertTriangle, RefreshCw, Trash2 } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 
 const STUDENTS_PER_PAGE = 20;
 
@@ -78,6 +89,33 @@ const Index = () => {
     setCurrentPage(1);
   };
 
+  const handleClearData = async () => {
+    try {
+      const { error } = await supabase
+        .from('students')
+        .delete()
+        .neq('Student_id', ''); // Delete all records
+
+      if (error) throw error;
+
+      toast({
+        title: "Success",
+        description: "All student data has been cleared"
+      });
+
+      fetchStudents(1);
+      fetchStats();
+      setCurrentPage(1);
+    } catch (error) {
+      console.error('Error clearing data:', error);
+      toast({
+        title: "Error",
+        description: "Failed to clear data",
+        variant: "destructive"
+      });
+    }
+  };
+
   const totalPages = Math.ceil(totalCount / STUDENTS_PER_PAGE);
 
   return (
@@ -89,10 +127,34 @@ const Index = () => {
             <h1 className="text-4xl font-bold tracking-tight">Student Dropout Prediction</h1>
             <p className="text-muted-foreground mt-2">Monitor and analyze student risk factors</p>
           </div>
-          <Button onClick={handleRefresh} variant="outline" className="gap-2">
-            <RefreshCw className="w-4 h-4" />
-            Refresh
-          </Button>
+          <div className="flex gap-2">
+            <AlertDialog>
+              <AlertDialogTrigger asChild>
+                <Button variant="outline" className="gap-2 text-destructive hover:text-destructive">
+                  <Trash2 className="w-4 h-4" />
+                  Clear Data
+                </Button>
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>Clear All Student Data?</AlertDialogTitle>
+                  <AlertDialogDescription>
+                    This will permanently delete all {totalCount} student records from the database. This action cannot be undone.
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>Cancel</AlertDialogCancel>
+                  <AlertDialogAction onClick={handleClearData} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
+                    Delete All
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
+            <Button onClick={handleRefresh} variant="outline" className="gap-2">
+              <RefreshCw className="w-4 h-4" />
+              Refresh
+            </Button>
+          </div>
         </div>
 
         {/* Stats Cards */}
