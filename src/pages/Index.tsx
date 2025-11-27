@@ -160,7 +160,7 @@ const Index = () => {
         {/* Header */}
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-4xl font-bold tracking-tight">Student Dropout Prediction</h1>
+            <h1 className="text-4xl font-bold tracking-tight">Sentri ai</h1>
             <p className="text-muted-foreground mt-2">Monitor and analyze student risk factors</p>
           </div>
           <div className="flex gap-2">
