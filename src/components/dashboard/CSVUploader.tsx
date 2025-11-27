@@ -39,6 +39,11 @@ export function CSVUploader({ onUploadComplete }: { onUploadComplete: () => void
           const data = results.data
             .filter(row => row.Student_id && row.Grade && row.Attendance_rate && row.Gpa)
             .map(row => {
+              const attendanceRaw = parseFloat(row.Attendance_rate.toString());
+              const normalizedAttendance = Number.isFinite(attendanceRaw)
+                ? Math.round(attendanceRaw <= 1 ? attendanceRaw * 100 : attendanceRaw)
+                : null;
+
               const mappedRow: any = {
                 Student_id: row.Student_id,
                 Grade: row.Grade,
@@ -46,7 +51,7 @@ export function CSVUploader({ onUploadComplete }: { onUploadComplete: () => void
                 Semester: row.Semester ? parseInt(row.Semester.toString(), 10) : null,
                 Age: row.Age ? parseInt(row.Age.toString(), 10) : null,
                 Gender: row.Gender,
-                Attendance_rate: parseFloat(row.Attendance_rate.toString()) / 100,
+                Attendance_rate: normalizedAttendance,
                 Gpa: parseFloat(row.Gpa.toString()),
                 Assignments_completed: row.Assignments_completed ? parseInt(row.Assignments_completed.toString(), 10) : null,
                 Behavior_incidents: row.Behavior_incidents ? parseInt(row.Behavior_incidents.toString(), 10) : null,
