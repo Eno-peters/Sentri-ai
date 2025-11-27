@@ -12,6 +12,7 @@ interface CSVUploadData {
   Attendance_rate: number;
   Gpa: number;
   Year?: string | number;
+  Semester?: string | number;
 }
 
 export function CSVUploader({ onUploadComplete }: { onUploadComplete: () => void }) {
@@ -34,7 +35,8 @@ export function CSVUploader({ onUploadComplete }: { onUploadComplete: () => void
                 Student_id: row.Student_id,
                 Grade: row.Grade,
                 Attendance_rate: parseFloat(row.Attendance_rate.toString()),
-                Gpa: parseFloat(row.Gpa.toString())
+                Gpa: parseFloat(row.Gpa.toString()),
+                Semester: row.Semester || '1' // Default to semester 1 if not provided
               };
               
               // Include Year if it exists in CSV
@@ -104,7 +106,7 @@ export function CSVUploader({ onUploadComplete }: { onUploadComplete: () => void
         <Upload className="w-5 h-5 text-muted-foreground" />
         <div className="flex-1">
           <h3 className="font-semibold">Upload Student Data</h3>
-          <p className="text-sm text-muted-foreground">CSV with Student_id, Grade, Attendance_rate, Gpa (and Year if required)</p>
+          <p className="text-sm text-muted-foreground">CSV with Student_id, Grade, Attendance_rate, Gpa (Year and Semester optional)</p>
         </div>
         <Button asChild disabled={isUploading}>
           <label className="cursor-pointer">
