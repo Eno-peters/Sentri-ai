@@ -128,7 +128,7 @@ export default function Auth() {
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background to-secondary/20 p-4">
       <Card className="w-full max-w-md p-8 space-y-6">
         <div className="text-center">
-          <h1 className="text-3xl font-bold">Student Dropout Prediction</h1>
+          <h1 className="text-3xl font-bold">Sentri ai</h1>
           <p className="text-muted-foreground mt-2">
             {isForgotPassword 
               ? "Reset your password" 
