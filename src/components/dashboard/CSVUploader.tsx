@@ -46,7 +46,7 @@ export function CSVUploader({ onUploadComplete }: { onUploadComplete: () => void
                 Semester: row.Semester ? parseInt(row.Semester.toString(), 10) : null,
                 Age: row.Age ? parseInt(row.Age.toString(), 10) : null,
                 Gender: row.Gender,
-                Attendance_rate: parseFloat(row.Attendance_rate.toString()),
+                Attendance_rate: parseFloat(row.Attendance_rate.toString()) / 100,
                 Gpa: parseFloat(row.Gpa.toString()),
                 Assignments_completed: row.Assignments_completed ? parseInt(row.Assignments_completed.toString(), 10) : null,
                 Behavior_incidents: row.Behavior_incidents ? parseInt(row.Behavior_incidents.toString(), 10) : null,
