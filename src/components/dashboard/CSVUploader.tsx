@@ -11,6 +11,7 @@ interface CSVUploadData {
   Grade: string;
   Attendance_rate: number;
   Gpa: number;
+  Year?: string | number;
 }
 
 export function CSVUploader({ onUploadComplete }: { onUploadComplete: () => void }) {
@@ -28,12 +29,21 @@ export function CSVUploader({ onUploadComplete }: { onUploadComplete: () => void
         complete: async (results) => {
           const data = results.data
             .filter(row => row.Student_id && row.Grade && row.Attendance_rate && row.Gpa)
-            .map(row => ({
-              Student_id: row.Student_id,
-              Grade: row.Grade,
-              Attendance_rate: parseFloat(row.Attendance_rate.toString()),
-              Gpa: parseFloat(row.Gpa.toString())
-            }));
+            .map(row => {
+              const mappedRow: any = {
+                Student_id: row.Student_id,
+                Grade: row.Grade,
+                Attendance_rate: parseFloat(row.Attendance_rate.toString()),
+                Gpa: parseFloat(row.Gpa.toString())
+              };
+              
+              // Include Year if it exists in CSV
+              if (row.Year) {
+                mappedRow.Year = row.Year;
+              }
+              
+              return mappedRow;
+            });
 
           if (data.length === 0) {
             toast({
@@ -94,7 +104,7 @@ export function CSVUploader({ onUploadComplete }: { onUploadComplete: () => void
         <Upload className="w-5 h-5 text-muted-foreground" />
         <div className="flex-1">
           <h3 className="font-semibold">Upload Student Data</h3>
-          <p className="text-sm text-muted-foreground">CSV with Student_id, Grade, Attendance_rate, Gpa</p>
+          <p className="text-sm text-muted-foreground">CSV with Student_id, Grade, Attendance_rate, Gpa (and Year if required)</p>
         </div>
         <Button asChild disabled={isUploading}>
           <label className="cursor-pointer">
