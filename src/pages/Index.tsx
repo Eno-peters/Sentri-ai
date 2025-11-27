@@ -214,7 +214,7 @@ const Index = () => {
         </div>
 
         {/* CSV Upload */}
-        <CSVUploader onUploadComplete={handleUploadComplete} userId={session.user.id} />
+        <CSVUploader onUploadComplete={handleUploadComplete} />
 
         {/* Students Table */}
         <StudentsTable
