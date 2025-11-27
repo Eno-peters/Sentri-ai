@@ -9,10 +9,18 @@ import Papa from "papaparse";
 interface CSVUploadData {
   Student_id: string;
   Grade: string;
-  Attendance_rate: number;
-  Gpa: number;
-  Year?: string | number;
-  Semester?: string | number;
+  Year: string | number;
+  Semester: string | number;
+  Age: string | number;
+  Gender: string;
+  Attendance_rate: string | number;
+  Gpa: string | number;
+  Assignments_completed: string | number;
+  Behavior_incidents: string | number;
+  Parent_engagement: string;
+  Socioeconomic_status: string;
+  Fee_balance: string | number;
+  Mental_health_flag: string;
 }
 
 export function CSVUploader({ onUploadComplete }: { onUploadComplete: () => void }) {
@@ -34,15 +42,19 @@ export function CSVUploader({ onUploadComplete }: { onUploadComplete: () => void
               const mappedRow: any = {
                 Student_id: row.Student_id,
                 Grade: row.Grade,
+                Year: row.Year ? parseInt(row.Year.toString(), 10) : null,
+                Semester: row.Semester ? parseInt(row.Semester.toString(), 10) : null,
+                Age: row.Age ? parseInt(row.Age.toString(), 10) : null,
+                Gender: row.Gender,
                 Attendance_rate: parseFloat(row.Attendance_rate.toString()),
                 Gpa: parseFloat(row.Gpa.toString()),
-                Semester: row.Semester || '1' // Default to semester 1 if not provided
+                Assignments_completed: row.Assignments_completed ? parseInt(row.Assignments_completed.toString(), 10) : null,
+                Behavior_incidents: row.Behavior_incidents ? parseInt(row.Behavior_incidents.toString(), 10) : null,
+                Parent_engagement: row.Parent_engagement,
+                Socioeconomic_status: row.Socioeconomic_status,
+                Fee_balance: row.Fee_balance ? parseFloat(row.Fee_balance.toString()) : null,
+                Mental_health_flag: row.Mental_health_flag
               };
-              
-              // Include Year if it exists in CSV
-              if (row.Year) {
-                mappedRow.Year = row.Year;
-              }
               
               return mappedRow;
             });
@@ -106,7 +118,7 @@ export function CSVUploader({ onUploadComplete }: { onUploadComplete: () => void
         <Upload className="w-5 h-5 text-muted-foreground" />
         <div className="flex-1">
           <h3 className="font-semibold">Upload Student Data</h3>
-          <p className="text-sm text-muted-foreground">CSV with Student_id, Grade, Attendance_rate, Gpa (Year and Semester optional)</p>
+          <p className="text-sm text-muted-foreground">CSV with Student_id, Grade, Year, Semester, Age, Gender, Attendance_rate, Gpa, Assignments_completed, Behavior_incidents, Parent_engagement, Socioeconomic_status, Fee_balance, Mental_health_flag</p>
         </div>
         <Button asChild disabled={isUploading}>
           <label className="cursor-pointer">
