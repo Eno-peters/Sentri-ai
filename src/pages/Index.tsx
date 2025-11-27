@@ -1,11 +1,13 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { supabase, Student } from "@/lib/supabase";
 import { StatsCard } from "@/components/dashboard/StatsCard";
 import { CSVUploader } from "@/components/dashboard/CSVUploader";
 import { StudentsTable } from "@/components/dashboard/StudentsTable";
 import { Button } from "@/components/ui/button";
-import { Users, AlertTriangle, RefreshCw, Trash2 } from "lucide-react";
+import { Users, AlertTriangle, RefreshCw, Trash2, LogOut } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
+import { Session } from "@supabase/supabase-js";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -21,11 +23,31 @@ import {
 const STUDENTS_PER_PAGE = 20;
 
 const Index = () => {
+  const navigate = useNavigate();
+  const [session, setSession] = useState<Session | null>(null);
   const [students, setStudents] = useState<Student[]>([]);
   const [totalCount, setTotalCount] = useState(0);
   const [atRiskCount, setAtRiskCount] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
   const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session);
+      if (!session) {
+        navigate("/auth");
+      }
+    });
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      setSession(session);
+      if (!session) {
+        navigate("/auth");
+      }
+    });
+
+    return () => subscription.unsubscribe();
+  }, [navigate]);
 
   const fetchStudents = async (page: number) => {
     setIsLoading(true);
@@ -70,9 +92,11 @@ const Index = () => {
   };
 
   useEffect(() => {
-    fetchStudents(currentPage);
-    fetchStats();
-  }, [currentPage]);
+    if (session) {
+      fetchStudents(currentPage);
+      fetchStats();
+    }
+  }, [currentPage, session]);
 
   const handleRefresh = () => {
     fetchStudents(currentPage);
@@ -116,7 +140,19 @@ const Index = () => {
     }
   };
 
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+    toast({
+      title: "Logged Out",
+      description: "You have been logged out successfully"
+    });
+  };
+
   const totalPages = Math.ceil(totalCount / STUDENTS_PER_PAGE);
+
+  if (!session) {
+    return null;
+  }
 
   return (
     <div className="min-h-screen bg-background">
@@ -128,6 +164,10 @@ const Index = () => {
             <p className="text-muted-foreground mt-2">Monitor and analyze student risk factors</p>
           </div>
           <div className="flex gap-2">
+            <Button onClick={handleLogout} variant="outline" className="gap-2">
+              <LogOut className="w-4 h-4" />
+              Logout
+            </Button>
             <AlertDialog>
               <AlertDialogTrigger asChild>
                 <Button variant="outline" className="gap-2 text-destructive hover:text-destructive">
@@ -174,7 +214,7 @@ const Index = () => {
         </div>
 
         {/* CSV Upload */}
-        <CSVUploader onUploadComplete={handleUploadComplete} />
+        <CSVUploader onUploadComplete={handleUploadComplete} userId={session.user.id} />
 
         {/* Students Table */}
         <StudentsTable

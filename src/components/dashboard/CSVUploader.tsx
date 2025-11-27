@@ -23,7 +23,7 @@ interface CSVUploadData {
   Mental_health_flag: string;
 }
 
-export function CSVUploader({ onUploadComplete }: { onUploadComplete: () => void }) {
+export function CSVUploader({ onUploadComplete, userId }: { onUploadComplete: () => void; userId: string }) {
   const [isUploading, setIsUploading] = useState(false);
 
   const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -40,6 +40,7 @@ export function CSVUploader({ onUploadComplete }: { onUploadComplete: () => void
             .filter(row => row.Student_id && row.Grade && row.Attendance_rate && row.Gpa)
             .map(row => {
               const mappedRow: any = {
+                user_id: userId,
                 Student_id: row.Student_id,
                 Grade: row.Grade,
                 Year: row.Year ? parseInt(row.Year.toString(), 10) : null,
